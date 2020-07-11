@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Row,Col,Container} from 'react-bootstrap'
+import {Row,Col,Container,Spinner} from 'react-bootstrap'
 import Projects from './Projects'
 
  class Details extends Component {
@@ -8,7 +8,8 @@ import Projects from './Projects'
      
          this.state = {
               student:[],
-              photo:''
+              photo:'',
+              isLoading:true
          }
      }
      saveImage=async(e)=>{
@@ -28,7 +29,7 @@ import Projects from './Projects'
             })
             let othername=await response.json()
           
-            this.setState({student:othername})
+            this.setState({student:othername,isLoading:false})
            }
           
        
@@ -44,7 +45,7 @@ import Projects from './Projects'
         })
         let othername=await response.json()
       
-        this.setState({student:othername})
+        this.setState({student:othername,isLoading:false})
         
      }
     render() {
@@ -53,14 +54,21 @@ import Projects from './Projects'
             <Row className='d-flex justify-content-center'>
                 <Col className='col_container' md={6}>
                <h2 className='mb-2'>{this.state.student.name}</h2> 
-                <img className='profile-imgClass'src={this.state.student.ImageUrl}/>
+               {this.state.isLoading===true
+               &&<Spinner animation="border" role="status">
+               <span className="sr-only">Loading...</span>
+             </Spinner>}
+                {this.state.isLoading===false&&<img className='profile-imgClass'src={this.state.student.ImageUrl}/>}
                 <input className='upload-btnClass'type="file" onChange={this.saveImage} accept='image/png,image/jpeg'/>
 
-                {this.state.student.projects&&this.state.student.projects.length===0&&<h1>NOT OK</h1>} 
+                {this.state.student.projects&&this.state.student.projects.length===0&&
+                   <h3>NO PROJECTS</h3> 
+                } 
+                {this.state.student.projects&&this.state.student.projects.length>0&&
+               <Projects student={this.state.student}/>} 
                 </Col>
               
-               {this.state.student.projects&&this.state.student.projects.length>0&&
-               <Projects student={this.state.student}/>} 
+              
         
             
                

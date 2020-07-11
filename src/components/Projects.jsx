@@ -12,7 +12,12 @@ class Projects extends Component {
     render() {
         return (
             <div>
-                {this.props.student.projects&&console.log(this.props.student.projects)}
+                {this.props.student.projects&&
+                <div>
+                  {this.props.student.projects.map(
+                    project=><h5>{project.name}</h5>
+                  )}
+                </div>}
             </div>
         )
     }
