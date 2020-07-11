@@ -74,6 +74,7 @@ class List extends Component {
           })
           let students=await response.json()
           this.setState({students})
+        
       }
       }
      
