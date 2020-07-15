@@ -74,12 +74,11 @@ class List extends Component {
       })
       if(response.ok){
         this.setState({showModal:false,editmode:false})
-        let response= await fetch("http://127.0.0.1:3456/students",{
-              headers: new Headers({'content-type': 'application/json'})
-          })
-          let students=await response.json()
-          this.setState({students})
-        
+        let response= await fetch(`http://127.0.0.1:3456/students?limit=${this.state.pagesize}&offset=${this.state.page*this.state.pagesize}`,{
+          headers: new Headers({'content-type': 'application/json'})
+      })
+      let students=await response.json()
+      this.setState({students})
       }
       }
      
