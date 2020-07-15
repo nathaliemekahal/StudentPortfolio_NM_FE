@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Button,Table, Container,Modal,Form} from 'react-bootstrap'
+import {Button,Table, Container,Modal,Form,Row} from 'react-bootstrap'
 import {withRouter} from 'react-router-dom'
 import{Link} from 'react-router-dom'
 
@@ -12,14 +12,16 @@ class List extends Component {
              students:[],
              showModal:false,
              student:{},
-             editmode:false
+             editmode:false,
+             pagesize:2,
+             page:0
     
         }
     }
     
     
     componentDidMount=async()=>{
-        let response= await fetch("http://127.0.0.1:3456/students",{
+        let response= await fetch(`http://127.0.0.1:3456/students?limit=${this.state.pagesize}&offset=${this.state.page*this.state.pagesize}`,{
             headers: new Headers({'content-type': 'application/json'})
         })
         let students=await response.json()
@@ -82,6 +84,18 @@ class List extends Component {
       }
      
     }
+    setPage=async(page)=>{
+      this.setState({page:page},async()=>{
+        await this.paginate()
+      })
+    }
+    paginate=async()=>{
+      let response= await fetch(`http://127.0.0.1:3456/students?limit=${this.state.pagesize}&offset=${this.state.page*this.state.pagesize}`,{
+        headers: new Headers({'content-type': 'application/json'})
+    })
+    let students=await response.json()
+    this.setState({students})
+    }
     deleteStudent=async(id)=>{
       let response= await fetch("http://127.0.0.1:3456/students/"+id,{
         method:'DELETE',
@@ -125,6 +139,10 @@ class List extends Component {
        
         return (
             <Container>
+              <Row className='pagination-btns justify-content-center my-3'>
+              <Button className='mr-3' onClick={()=>this.setPage(this.state.page+1)}>+</Button>
+              {this.state.page>0&&<Button onClick={()=>this.setPage(this.state.page-1)}>-</Button>}
+              </Row>
             <Table striped bordered hover>
             <thead>
               <tr>
