@@ -27,7 +27,7 @@ class List extends Component {
         
      }
      addStudent=async()=>{
-        let response= await fetch("http://127.0.0.1:3002/students",{
+        let response= await fetch("http://127.0.0.1:3456/students",{
             headers: new Headers({'content-type': 'application/json'})
         })
         let students=await response.json()
@@ -48,7 +48,7 @@ class List extends Component {
       
     }
     saveNewStudent=async()=>{
-      console.log(this.state.editmode)
+     
       if(this.state.editmode===false){
         let response= await fetch("http://127.0.0.1:3456/students/",{
           method:'POST',
@@ -65,14 +65,14 @@ class List extends Component {
       }
       }
       if(this.state.editmode===true){
-        let response= await fetch("http://127.0.0.1:3002/students/"+this.state.student._id,{
+        let response= await fetch("http://127.0.0.1:3456/students/"+this.state.student._id,{
           method:'PUT',
           body: JSON.stringify(this.state.student),
           headers: new Headers({'content-type': 'application/json'})
       })
       if(response.ok){
         this.setState({showModal:false,editmode:false})
-        let response= await fetch("http://127.0.0.1:3002/students",{
+        let response= await fetch("http://127.0.0.1:3456/students",{
               headers: new Headers({'content-type': 'application/json'})
           })
           let students=await response.json()
@@ -83,7 +83,7 @@ class List extends Component {
      
     }
     deleteStudent=async(id)=>{
-      let response= await fetch("http://127.0.0.1:3002/students/"+id,{
+      let response= await fetch("http://127.0.0.1:3456/students/"+id,{
         method:'DELETE',
         // body: JSON.stringify(this.state.student),
         headers: new Headers({'content-type': 'application/json'})
@@ -92,7 +92,7 @@ class List extends Component {
     )
     if(response.ok){
     
-      let response= await fetch("http://127.0.0.1:3002/students",{
+      let response= await fetch("http://127.0.0.1:3456/students",{
             headers: new Headers({'content-type': 'application/json'})
         })
         let students=await response.json()
@@ -106,13 +106,13 @@ class List extends Component {
     editStudent=async(id)=>{
       this.setState({editmode:true,showModal:true})
       
-      let response= await fetch("http://127.0.0.1:3002/students/"+id,{
+      let response= await fetch("http://127.0.0.1:3456/students/"+id,{
         method:'Get',
         // body: JSON.stringify(this.state.student),
         headers: new Headers({'content-type': 'application/json'})
     })
     let parsedJson=await response.json()
-    this.setState({student:parsedJson})
+    this.setState({student:parsedJson[0]})
     }
     // showDetails=(id)=>{
     //   console.log("id",id)
@@ -192,6 +192,11 @@ class List extends Component {
             <>
              <Modal.Body>
              <Form.Group >
+             <Form.Label>ID</Form.Label>
+             <Form.Control type="text"  value={this.state.student._id}  id='_id' onChange={this.catchInput} />
+            
+           </Form.Group>
+             <Form.Group >
              <Form.Label>Name</Form.Label>
              <Form.Control type="text"  value={this.state.student.name} id='name'onChange={this.catchInput} />
             
@@ -205,6 +210,12 @@ class List extends Component {
              <Form.Label>Email address</Form.Label>
              <Form.Control type="email"id='email' value={this.state.student.email}onChange={this.catchInput} />
            
+           </Form.Group>
+           <Form.Group>
+             <Form.Label>DOB</Form.Label>
+             {this.state.student.dob&& <Form.Control type="date" id='dob'
+              value={this.state.student.dob.slice(0,-14)}onChange={this.catchInput} />}
+
            </Form.Group>
          
    
