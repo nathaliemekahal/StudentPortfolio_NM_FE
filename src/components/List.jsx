@@ -19,7 +19,7 @@ class List extends Component {
     
     
     componentDidMount=async()=>{
-        let response= await fetch("http://127.0.0.1:3002/students",{
+        let response= await fetch("http://127.0.0.1:3456/students",{
             headers: new Headers({'content-type': 'application/json'})
         })
         let students=await response.json()
@@ -42,19 +42,22 @@ class List extends Component {
       let field=e.currentTarget.id
       let student=this.state.student
       student[field]=e.currentTarget.value
-      this.setState({student})
+      this.setState({student},()=>{
+        console.log(this.state.student)
+      })
       
     }
     saveNewStudent=async()=>{
+      console.log(this.state.editmode)
       if(this.state.editmode===false){
-        let response= await fetch("http://127.0.0.1:3002/students",{
+        let response= await fetch("http://127.0.0.1:3456/students/",{
           method:'POST',
           body: JSON.stringify(this.state.student),
           headers: new Headers({'content-type': 'application/json'})
       })
       if(response.ok){
         this.setState({showModal:false})
-        let response= await fetch("http://127.0.0.1:3002/students",{
+        let response= await fetch("http://127.0.0.1:3456/students",{
               headers: new Headers({'content-type': 'application/json'})
           })
           let students=await response.json()
@@ -153,6 +156,11 @@ class List extends Component {
             <>
              <Modal.Body>
              <Form.Group >
+             <Form.Label>ID</Form.Label>
+             <Form.Control type="text" placeholder="Enter ID" id='_id'onChange={this.catchInput} />
+            
+           </Form.Group>
+             <Form.Group >
              <Form.Label>Name</Form.Label>
              <Form.Control type="text" placeholder="Enter name" id='name'onChange={this.catchInput} />
             
@@ -165,6 +173,11 @@ class List extends Component {
              <Form.Group>
              <Form.Label>Email address</Form.Label>
              <Form.Control type="email"id='email' placeholder="Enter email"onChange={this.catchInput} />
+           
+           </Form.Group>
+           <Form.Group>
+             <Form.Label>DOB</Form.Label>
+             <Form.Control type="date" id='dob' placeholder="Enter Date"onChange={this.catchInput} />
            
            </Form.Group>
    
@@ -193,6 +206,8 @@ class List extends Component {
              <Form.Control type="email"id='email' value={this.state.student.email}onChange={this.catchInput} />
            
            </Form.Group>
+         
+   
    
         
            </Modal.Body>
