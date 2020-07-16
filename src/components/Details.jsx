@@ -58,12 +58,13 @@ import Projects from './Projects'
         })
         if(response.ok){
             this.setState({showModal:false})
-            let response= await fetch("http://127.0.0.1:3456/students/"+this.props.match.params.id,{
+            let response= await fetch("http://127.0.0.1:3456/projects/"+this.props.match.params.id,{
                 headers: new Headers({'content-type': 'application/json'})
             })
-            let othername=await response.json()
+            let projects=await response.json()
           
-            this.setState({student:othername,isLoading:false})
+            this.setState({projects,isLoading:false})
+
             
         }
      }
@@ -123,18 +124,22 @@ import Projects from './Projects'
                         placeholder='ENTER DESCRIPTION' onChange={this.catchInput}/>
                         
                     </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Start Date</Form.Label>
-                        <Form.Control type="date"id='start'onChange={this.catchInput} />
-                    
+                    <Form.Group >
+                        <Form.Label>Project repoUrl</Form.Label>
+                        <Form.Control type="text" id='repoUrl' 
+                        placeholder='ENTER repoUrl' onChange={this.catchInput}/>
+                        
                     </Form.Group>
+                    <Form.Group >
+                        <Form.Label>Project liveUrl</Form.Label>
+                        <Form.Control type="text" id='liveUrl' 
+                        placeholder='ENTER liveUrl' onChange={this.catchInput}/>
+                        
+                    </Form.Group>
+                    
 
                  
-                    <Form.Group>
-                        <Form.Label>End Date</Form.Label>
-                        <Form.Control type="date"id='end'onChange={this.catchInput} />
-                    
-                    </Form.Group>
+                
             
         
                 </Modal.Body>    
